@@ -1,241 +1,517 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import { useState } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SurveyKhatian() {
-  const [division, setDivision] = useState("");
-  const [district, setDistrict] = useState("");
-  const [upazila, setUpazila] = useState("");
-  const [type, setType] = useState("");
-  const [mojaname, setMojaname] = useState("");
-  const [custom, setCustom] = useState(false);
 
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [days, setDays] = useState(1);
-  const [khatianNo, setKhatianNo] = useState("");
 
-  const [data, setData] = useState<any[]>([]);
-  const [editId, setEditId] = useState<number | null>(null);
-  const [search, setSearch] = useState("");
+ const [division, setDivision] = useState ('');
+  const [district, setDistrict] = useState('');
+  const [upazila, setUpazila] = useState('');
+  const [type, setType] = useState('');
+  const [mouza, setMouza] = useState('');
+  const [mojaname, setMojaname] = useState('');
 
-  // Live countdown effect
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => setTick(t => t + 1), 1000);
-    return () => clearInterval(interval);
-  }, []);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("surveyData");
-    if (saved) setData(JSON.parse(saved));
-  }, []);
 
-  const divisions = ["ময়মনসিংহ", "সিলেট", "রংপুর", "রাজশাহী", "খুলনা", "ঢাকা"];
+  const divisions = ['ময়মনসিংহ', 'সিলেট', 'রংপুর', 'রাজশাহী', 'খুলনা', 'ঢাকা'];
+
   const districtData: { [key: string]: string[] } = {
-    ময়মনসিংহ: ["ময়মনসিংহ", "নেত্রকোনা", "শেরপুর"],
-    সিলেট: ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ"],
-    রংপুর: ["দিনাজপুর", "ঠাকুরগাঁও", "কুড়িগ্রাম"],
-    রাজশাহী: ["সিরাজগঞ্জ", "নওগাঁ", "চাঁপাইনবাবগঞ্জ"],
-    খুলনা: ["খুলনা", "যশোর", "বাগেরহাট"],
-    ঢাকা: ["ঢাকা", "গাজীপুর", "নারায়ণগঞ্জ"],
+    ময়মনসিংহ: ['ময়মনসিংহ', 'নেত্রকোনা', 'শেরপুর'],
+    সিলেট: ['সিলেট', 'মৌলভীবাজার', 'হবিগঞ্জ'],
+    রংপুর: ['দিনাজপুর', 'ঠাকুরগাঁও', 'কুড়িগ্রাম'],
+    রাজশাহী: ['সিরাজগঞ্জ', 'নওগাঁ', 'চাঁপাইনবাবগঞ্জ'],
+    খুলনা: ['খুলনা', 'যশোর', 'বাগেরহাট'],
+    ঢাকা: ['ঢাকা', 'গাজীপুর', 'নারায়ণগঞ্জ'],
   };
-  const upojelas = ["সিরাজগঞ্জ সদর","কামারখন্দ","রায়গঞ্জ","তারাশ","শাহজাদপুর","বেলকুচি","চৌহালী","কাজীপুর","উল্লাপাড়া"];
-  const khotianDhoron = ["সি.এস","এস.এ","আর এস","বি আর এস","নামজারী খতিয়ান"];
 
-  const saveData = () => {
-    if (!division || !district || !upazila || !type || !mojaname || !name || !mobile || !days || !khatianNo) {
-      toast.error("⚠️ সব তথ্য পূরণ করুন!");
+  
+  const upojelas = [
+  '  সিরাজগঞ্জ সদর ',
+
+  'কামারখন্দ ',
+
+' রায়গঞ্জ ',
+
+ ' তারাশ ',
+
+ ' শাহজাদপুর ',
+
+' বেলকুচি ',
+
+' চৌহালী ',
+
+ 'কাজীপুর ',
+
+ 'উল্লাপাড়া ',
+
+];
+
+
+
+  const khotianDhoron = [
+  ' সি.এস  ',
+
+  'এস.এ ',
+
+' আর এস ',
+
+ 'বি আর এস ',
+
+ ' নামজারী খতিয়ান ',
+
+
+];
+
+
+
+const districtData125: { [key: string]: string[] } = {
+    সিরাজগঞ্জ: ['ময়মনসিংহ', 'নেত্রকোনা', 'শেরপুর'],
+    সিলেট: ['সিলেট', 'মৌলভীবাজার', 'হবিগঞ্জ'],
+    রংপুর: ['দিনাজপুর', 'ঠাকুরগাঁও', 'কুড়িগ্রাম'],
+    রাজশাহী: ['রাজশাহী', 'নওগাঁ', 'চাঁপাইনবাবগঞ্জ'],
+    খুলনা: ['খুলনা', 'যশোর', 'বাগেরহাট'],
+    ঢাকা: ['ঢাকা', 'গাজীপুর', 'নারায়ণগঞ্জ'],
+  };
+
+
+
+  const handleSubmit = () => {
+    if (!division || !district || !upazila || !type || !mouza) {
+      alert('অনুগ্রহ করে সকল তথ্য পূরণ করুন!');
       return;
     }
 
-    const startDate = new Date();
-    const deliveryDate = new Date();
-    deliveryDate.setDate(startDate.getDate() + parseInt(days.toString()));
+    alert(`🔍 খোঁজা হচ্ছে: 
+    বিভাগ: ${division}
+    জেলা: ${district}
+    উপজেলা: ${upazila}
+    ধরন: ${type}
+    মৌজা: ${mouza}`);
 
-    if (editId) {
-      const updated = data.map(item =>
-        item.id === editId
-          ? { ...item, division, district, upazila, type, mojaname, name, mobile, khatianNo, startDate: startDate.toISOString(), deliveryDate: deliveryDate.toISOString() }
-          : item
-      );
-      setData(updated);
-      localStorage.setItem("surveyData", JSON.stringify(updated));
-      setEditId(null);
-      toast.success("✅ ডেটা আপডেট হয়েছে!");
-    } else {
-      const newEntry = {
-        id: Date.now(),
-        division, district, upazila, type, mojaname, name, mobile, khatianNo,
-        startDate: startDate.toISOString(),
-        deliveryDate: deliveryDate.toISOString(),
-        status: "Pending"
-      };
-      const updated = [...data, newEntry];
-      setData(updated);
-      localStorage.setItem("surveyData", JSON.stringify(updated));
-      toast.success("✅ ডেটা সেভ হয়েছে!");
-    }
-
-    setDivision(""); setDistrict(""); setUpazila(""); setType(""); setMojaname(""); setCustom(false);
-    setName(""); setMobile(""); setDays(1); setKhatianNo("");
   };
 
-  const editEntry = (id: number) => {
-    const entry = data.find(d => d.id === id);
-    if (!entry) return;
-    setDivision(entry.division); setDistrict(entry.district); setUpazila(entry.upazila);
-    setType(entry.type); setMojaname(entry.mojaname); setCustom(false);
-    setName(entry.name); setMobile(entry.mobile); setKhatianNo(entry.khatianNo);
-    const diff = Math.ceil((new Date(entry.deliveryDate).getTime() - new Date(entry.startDate).getTime()) / (1000 * 60 * 60 * 24));
-    setDays(diff);
-    setEditId(id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const [custom, setCustom] = useState(false);
+
+
+
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+
+  const handleSearch = () => {
+    toast.success('অনুসন্ধান সম্পন্ন হয়েছে ✅');
   };
-
-  const deleteEntry = (id: number) => {
-    if (!confirm("আপনি কি সত্যিই ডিলিট করতে চান?")) return;
-    const updated = data.filter(d => d.id !== id);
-    setData(updated);
-    localStorage.setItem("surveyData", JSON.stringify(updated));
-    toast.success("🗑️ ডেটা মুছে ফেলা হয়েছে!");
-  };
-
-  const getCountdown = (deliveryDate: string, status: string) => {
-    if(status === "Delivered") return "✅ Delivered";
-    const now = new Date().getTime();
-    const end = new Date(deliveryDate).getTime();
-    const distance = end - now;
-    if(distance <= 0) return "✅ Delivered";
-    const d = Math.floor(distance / (1000*60*60*24));
-    const h = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-    const m = Math.floor((distance % (1000*60*60)) / (1000*60));
-    const s = Math.floor((distance % (1000*60)) / 1000);
-    return `${d} দিন ${h} ঘন্টা ${m} মিনিট ${s} সেকেন্ড বাকি`;
-  };
-
-  const updateStatus = (id: number, status: string) => {
-    const updated = data.map(d => {
-      if(d.id === id){
-        if(status === "Delivered") return {...d, status};
-        const now = new Date().getTime();
-        const end = new Date(d.deliveryDate).getTime();
-        if(end <= now) return {...d, status: "Delivered"};
-        return {...d, status};
-      }
-      return d;
-    });
-    setData(updated);
-    localStorage.setItem("surveyData", JSON.stringify(updated));
-  };
-
-  const filteredData = data.filter(item =>
-    item.name.toLowerCase().includes(search.toLowerCase()) ||
-    item.mobile.toLowerCase().includes(search.toLowerCase()) ||
-    item.khatianNo.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const statusColor = (status: string) => {
-    switch(status){
-      case "Pending": return "bg-yellow-500";
-      case "Working": return "bg-blue-500";
-      case "Delivered": return "bg-green-500";
-      default: return "bg-gray-500";
-    }
-  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      <Toaster position="top-right" />
+      <Toaster position="top-right" reverseOrder={false} />
+
+      {/* Header */}
       <header className="bg-gray-950 shadow-md py-4">
         <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-green-400">📑 Survey Khatian + Delivery</h1>
+          <h1 className="text-2xl font-bold text-green-400">📑 Survey Khatian</h1>
+          <div className="space-x-4">
+            <button onClick={() => setShowLogin(true)} className="bg-green-600 hover:bg-green-700 transition px-4 py-2 rounded text-white text-sm font-semibold">Login</button>
+            <button onClick={() => setShowRegister(true)} className="bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded text-white text-sm font-semibold">Register</button>
+          </div>
         </div>
       </header>
 
-      {/* Form */}
+      {/* Notice */}
+      <section className="max-w-6xl mx-auto px-4 mt-4">
+        <p className="bg-red-600 text-white px-4 py-2 rounded shadow">⚠️ আপনার জমির সঠিক তথ্য যাচাই করে নিবন্ধন করুন।</p>
+      </section>
+
+      {/* Survey Form */}
       <section className="max-w-6xl mx-auto mt-8 px-4">
-        <div className="bg-gray-800 shadow-md rounded-lg p-6 space-y-4">
-          <h2 className="text-xl font-bold text-green-400">সার্ভে খতিয়ান ফর্ম</h2>
+        <div className="bg-gray-800 shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-bold text-green-400 mb-6">সার্ভে খতিয়ানের তথ্য</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <select value={division} onChange={e => { setDivision(e.target.value); setDistrict(""); }} className="bg-gray-900 border border-gray-600 text-white p-2 rounded">
-              <option value="">বিভাগ নির্বাচন করুন</option>
-              {divisions.map(div => <option key={div}>{div}</option>)}
-            </select>
-            <select value={district} onChange={e => setDistrict(e.target.value)} disabled={!division} className="bg-gray-900 border border-gray-600 text-white p-2 rounded">
-              <option value="">জেলা নির্বাচন করুন</option>
-              {districtData[division]?.map(d => <option key={d}>{d}</option>)}
-            </select>
-            <select value={upazila} onChange={e => setUpazila(e.target.value)} className="bg-gray-900 border border-gray-600 text-white p-2 rounded">
-              <option value="">উপজেলা/থানা নির্বাচন করুন</option>
-              {upojelas.map(u => <option key={u}>{u}</option>)}
-            </select>
-            <select value={type} onChange={e => setType(e.target.value)} className="bg-gray-900 border border-gray-600 text-white p-2 rounded">
-              <option value="">খতিয়ান ধরন</option>
-              {khotianDhoron.map(t => <option key={t}>{t}</option>)}
-            </select>
-            <select className="bg-gray-900 border border-gray-600 text-white p-2 rounded" onChange={e => { if(e.target.value === "custom") { setCustom(true); setMojaname(""); } else { setCustom(false); setMojaname(e.target.value); } }}>
-              <option value="">মৌজা নির্বাচন করুন</option>
-              <option value="মৌজা-১">মৌজা-১</option>
-              <option value="মৌজা-২">মৌজা-২</option>
-              <option value="custom">নিজে লিখুন</option>
-            </select>
-            {custom && <input value={mojaname} onChange={e => setMojaname(e.target.value)} className="bg-gray-900 border border-gray-600 text-white p-2 rounded" placeholder="মৌজার নাম লিখুন" />}
+
+             <select
+                value={division}
+                onChange={(e) => {
+                  setDivision(e.target.value);
+                  setDistrict('');
+                }}
+                className="bg-gray-900 border border-gray-600 text-white p-2 rounded"
+              >
+                <option value="">বাছাই করুন</option>
+                {divisions.map((div) => (
+                  <option key={div} value={div}>
+                    {div}
+                  </option>
+                ))}
+              </select>
+
+             {/* <select
+            value={division}
+            onChange={(e) => {
+              setDivision(e.target.value)
+              setDistrict('')
+            }}
+          className="bg-gray-900 border border-gray-600 text-white p-2 rounded"
+          >
+
+            <option value="">বিভাগ নির্বাচন করুন</option>
+            {divisions.map((div) => (
+              <option key={div} value={div}>{div}</option>
+            ))}
+          </select> */}
+
+
+
+           
+
+
+
+
+
+
+             <select
+                value={district}
+                onChange={(e) => setDistrict(e.target.value)}
+                disabled={!division}
+               className="bg-gray-900 border border-gray-600 text-white p-2 rounded"
+              >
+                
+             <option>জেলা</option>
+
+                {districtData[division]?.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+
+
+
+
+           
+        
+      <select
+                value={division}
+                onChange={(e) => {
+                  setDivision(e.target.value);
+                  setDistrict('');
+                }}
+                className="bg-gray-900 border border-gray-600 text-white p-2 rounded"
+              >
+                <option value="">থানা</option>
+                {upojelas.map((div) => (
+                  <option key={div} value={div}>
+                    {div}
+                  </option>
+                ))}
+              </select>
+
+
+
+
+                <select
+                value={division}
+                onChange={(e) => {
+                  setDivision(e.target.value);
+                  setDistrict('');
+                }}
+                className="bg-gray-900 border border-gray-600 text-white p-2 rounded"
+              >
+
+                <option value="">খতিয়ান ধরন</option>
+                {khotianDhoron.map((div) => (
+                  <option key={div} value={div}>
+                    {div}
+                  </option>
+                ))}
+              </select>
+
+ <div className="space-y-4">
+      <select
+        className="bg-gray-900 border border-gray-600 text-white p-2 rounded w-full"
+        onChange={(e) => {
+          if (e.target.value === "custom") {
+            setCustom(true);
+          } else {
+            setCustom(false);
+            setMojaname(e.target.value);
+          }
+        }}
+      >
+        <option value="">মৌজার নাম নির্বাচন করুন</option>
+        <option value="মৌজা-১">মৌজা-১</option>
+        <option value="মৌজা-২">মৌজা-২</option>
+        <option value="custom">নিজে লিখুন</option>
+      </select>
+
+      {custom && (
+        <input
+          value={mojaname}
+          onChange={(e) => setMojaname(e.target.value)}
+          className="bg-gray-900 border border-gray-600 text-white p-2 rounded w-full"
+          placeholder="আপনার মৌজার নাম লিখুন"
+          type="text"
+        />
+      )}
+
+      <p className="text-gray-400">✅ নির্বাচিত মৌজা: {mojaname || "কিছু নেই"}</p>
+    </div>
+             
+             
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-            <input type="text" value={name} onChange={e => setName(e.target.value)} className="bg-gray-900 border border-gray-600 text-white p-2 rounded" placeholder="আপনার নাম"/>
-            <input type="text" value={mobile} onChange={e => setMobile(e.target.value)} className="bg-gray-900 border border-gray-600 text-white p-2 rounded" placeholder="মোবাইল নাম্বার"/>
-            <input type="text" value={khatianNo} onChange={e => setKhatianNo(e.target.value)} className="bg-gray-900 border border-gray-600 text-white p-2 rounded" placeholder="খতিয়ান নং"/>
-            <input type="number" value={days} onChange={e => setDays(e.target.valueAsNumber)} className="bg-gray-900 border border-gray-600 text-white p-2 rounded" placeholder="ডেলিভারি কত দিন পরে"/>
-          </div>
-
-          <button onClick={saveData} className="mt-4 bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-bold">{editId ? "✏️ আপডেট করুন" : "💾 সেভ করুন"}</button>
+          <button
+            onClick={handleSearch}
+            className="mt-6 w-full md:w-auto bg-green-600 hover:bg-green-700 transition px-6 py-2 rounded shadow text-white font-semibold">
+            🔍 অনুসন্ধান করুন
+          </button>
         </div>
       </section>
 
-      {/* Search */}
-      <section className="max-w-6xl mx-auto mt-6 px-4">
-        <input type="text" value={search} onChange={e => setSearch(e.target.value)} className="w-full p-2 rounded bg-gray-900 border border-gray-600 text-white" placeholder="নাম, মোবাইল বা খতিয়ান নং দিয়ে খুঁজুন"/>
-      </section>
+      {/* Scroll to top button */}
+      <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 p-3 rounded-full text-white shadow-lg">
+        ⬆️
+      </button>
 
-      {/* Data List */}
-      <section className="max-w-6xl mx-auto mt-4 px-4 space-y-4">
-        {filteredData.map(item => {
-          // Auto update Delivered status
-          const now = new Date().getTime();
-          const deliveryTime = new Date(item.deliveryDate).getTime();
-          if(item.status !== "Delivered" && now >= deliveryTime){
-            updateStatus(item.id, "Delivered");
-            item.status = "Delivered";
-          }
-
-          return (
-            <div key={item.id} className={`bg-gray-800 p-4 rounded-lg space-y-1 border-l-4 ${statusColor(item.status)}`}>
-              <p>👤 {item.name} | 📞 {item.mobile} | 📑 {item.khatianNo}</p>
-              <p>📍 {item.division} - {item.district} - {item.upazila}</p>
-              <p>📑 {item.type} | মৌজা: {item.mojaname}</p>
-              <p>🗓️ সেভের তারিখ: {new Date(item.startDate).toLocaleString("bn-BD")}</p>
-              <p>🚚 ডেলিভারি তারিখ: {new Date(item.deliveryDate).toLocaleString("bn-BD")}</p>
-              <p className="text-green-400 font-bold">⏳ {getCountdown(item.deliveryDate, item.status)}</p>
-              <p>📌 Status:
-                <select value={item.status} onChange={e => updateStatus(item.id, e.target.value)} className="bg-gray-900 border border-gray-600 text-white px-2 py-1 rounded ml-2">
-                  <option value="Pending">Pending</option>
-                  <option value="Working">Working</option>
-                  <option value="Delivered">Delivered</option>
-                </select>
-              </p>
-              <div className="flex gap-4 mt-2">
-                <button onClick={() => editEntry(item.id)} className="bg-yellow-500 px-3 py-1 rounded font-semibold">✏️ Edit</button>
-                <button onClick={() => deleteEntry(item.id)} className="bg-red-600 px-3 py-1 rounded font-semibold">🗑️ Delete</button>
+      {/* Login Modal */}
+      <AnimatePresence>
+        {showLogin && (
+          <motion.div
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <div className="bg-gray-900 rounded-lg shadow-lg p-8 w-full max-w-md">
+              <h3 className="text-xl font-bold mb-4">🔐 Login</h3>
+              <input type="email" placeholder="Email" className="w-full mb-3 p-2 rounded bg-gray-800 text-white" />
+              <input type="password" placeholder="Password" className="w-full mb-4 p-2 rounded bg-gray-800 text-white" />
+              <div className="flex justify-end space-x-2">
+                <button onClick={() => setShowLogin(false)} className="text-gray-400 hover:text-white">Cancel</button>
+                <button onClick={() => { toast.success('Login Success ✅'); setShowLogin(false); }} className="bg-green-600 px-4 py-2 rounded">Login</button>
               </div>
             </div>
-          )
-        })}
-        {filteredData.length === 0 && <p className="text-gray-400 text-center">কোনও ডেটা পাওয়া যায়নি।</p>}
-      </section>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Register Modal */}
+      <AnimatePresence>
+        {showRegister && (
+          <motion.div
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <div className="bg-gray-900 rounded-lg shadow-lg p-8 w-full max-w-md">
+              <h3 className="text-xl font-bold mb-4">📝 Register</h3>
+              <input type="text" placeholder="Name" className="w-full mb-3 p-2 rounded bg-gray-800 text-white" />
+              <input type="email" placeholder="Email" className="w-full mb-3 p-2 rounded bg-gray-800 text-white" />
+              <input type="password" placeholder="Password" className="w-full mb-4 p-2 rounded bg-gray-800 text-white" />
+              <div className="flex justify-end space-x-2">
+                <button onClick={() => setShowRegister(false)} className="text-gray-400 hover:text-white">Cancel</button>
+                <button onClick={() => { toast.success('Registration Complete 🎉'); setShowRegister(false); }} className="bg-blue-600 px-4 py-2 rounded">Register</button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
 
+
+
+
+
+
+
+
+
+// 'use client';
+
+// import { useState } from 'react';
+// import { ChevronDown, Search } from 'lucide-react';
+
+
+// export default function SurveyKhatianPage() {
+//   const [division, setDivision] = useState ('');
+//   const [district, setDistrict] = useState('');
+//   const [upazila, setUpazila] = useState('');
+//   const [type, setType] = useState('');
+//   const [mouza, setMouza] = useState('');
+
+//   const divisions = ['ময়মনসিংহ', 'সিলেট', 'রংপুর', 'রাজশাহী', 'খুলনা', 'ঢাকা'];
+
+//   const districtData: { [key: string]: string[] } = {
+//     ময়মনসিংহ: ['ময়মনসিংহ', 'নেত্রকোনা', 'শেরপুর'],
+//     সিলেট: ['সিলেট', 'মৌলভীবাজার', 'হবিগঞ্জ'],
+//     রংপুর: ['দিনাজপুর', 'ঠাকুরগাঁও', 'কুড়িগ্রাম'],
+//     রাজশাহী: ['রাজশাহী', 'নওগাঁ', 'চাঁপাইনবাবগঞ্জ'],
+//     খুলনা: ['খুলনা', 'যশোর', 'বাগেরহাট'],
+//     ঢাকা: ['ঢাকা', 'গাজীপুর', 'নারায়ণগঞ্জ'],
+//   };
+
+//   const handleSubmit = () => {
+//     if (!division || !district || !upazila || !type || !mouza) {
+//       alert('অনুগ্রহ করে সকল তথ্য পূরণ করুন!');
+//       return;
+//     }
+
+//     alert(`🔍 খোঁজা হচ্ছে: 
+//     বিভাগ: ${division}
+//     জেলা: ${district}
+//     উপজেলা: ${upazila}
+//     ধরন: ${type}
+//     মৌজা: ${mouza}`);
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-gray-100">
+//       {/* Header */}
+//       <header className="bg-green-800 text-white py-4 px-6 shadow">
+//         <div className="max-w-7xl mx-auto flex justify-between items-center">
+//           <h1 className="text-xl font-bold">ভূমি সেবা পোর্টাল</h1>
+//           <button
+//             onClick={() => window.location.href = "/login"}
+//             className="bg-white text-green-800 px-4 py-1 rounded hover:bg-gray-200"
+//           >
+//             লগইন
+//           </button>
+//         </div>
+//       </header>
+
+//       {/* Service Tabs */}
+//       <section className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+//         {['সার্ভে খতিয়ান', 'নামজারি খতিয়ান', 'মৌজা ম্যাপ', 'আবেদনের অবস্থান', 'নির্দেশিকা'].map((item, idx) => (
+//           <div
+//             key={idx}
+//             className="bg-white border-2 border-green-600 text-center py-6 rounded-lg cursor-pointer hover:bg-green-600 hover:text-white transition"
+//           >
+//             <div className="text-sm font-semibold">{item}</div>
+//           </div>
+//         ))}
+//       </section>
+
+//       {/* Notice */}
+//       <p className="text-center text-red-600 font-semibold text-sm px-4">
+//         এখন থেকে খতিয়ানের কপি আর কোড সম্পূর্ণ অনলাইন/ডাউনলোডযোগ্য কপি ১০০ টাকার বিনিময়ে পাওয়া যাবে। এছাড়াও সার্টিফাইড/সত্যায়িত খতিয়ান রেজিস্ট্রি অফিসে পাওয়া যাবে।
+//       </p>
+
+//       {/* Form */}
+//     <section className="max-w-6xl mx-auto mt-8 px-4">
+//   <div className="bg-gray-900 shadow-md rounded-lg p-6">
+//     <h2 className="text-xl font-bold text-green-400 mb-6">📄 সার্ভে খতিয়ানের তথ্য</h2>
+
+//     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+//             {/* বিভাগ */}
+//             <div>
+//               <label className="block mb-1 font-semibold">বিভাগ</label>
+//               <select
+//                 value={division}
+//                 onChange={(e) => {
+//                   setDivision(e.target.value);
+//                   setDistrict('');
+//                 }}
+//                 className="w-full bg-gray-900 border border-gray-300 rounded px-3 py-2"
+//               >
+//                 <option value="">বাছাই করুন</option>
+//                 {divisions.map((div) => (
+//                   <option key={div} value={div}>
+//                     {div}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+
+//             {/* জেলা */}
+//             <div>
+//               <label className="block  mb-1 font-semibold">জেলা</label>
+//               <select
+//                 value={district}
+//                 onChange={(e) => setDistrict(e.target.value)}
+//                 disabled={!division}
+//                 className="w-full bg-gray-900 border border-gray-300 rounded px-3 py-2 "
+//               >
+//                 <option value="">জেলা বাছাই করুন</option>
+//                 {districtData[division]?.map((d) => (
+//                   <option key={d} value={d}>
+//                     {d}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+
+//             {/* উপজেলা */}
+//             <div>
+//               <label className="block mb-1 font-semibold">উপজেলা/থানা</label>
+//               <input
+//                 type="text"
+//                 value={upazila}
+//                 onChange={(e) => setUpazila(e.target.value)}
+//                 className="w-full border border-gray-300 rounded px-3 py-2"
+//                 placeholder="উপজেলা লিখুন"
+//               />
+//             </div>
+
+//             {/* খতিয়ানের ধরন */}
+//             <div>
+//               <label className="block mb-1 font-semibold">খতিয়ানের ধরন</label>
+//               <select
+//                 value={type}
+//                 onChange={(e) => setType(e.target.value)}
+//                 className="w-full border border-gray-300 rounded px-3 py-2"
+//               >
+//                 <option value="">ধরন বাছাই করুন</option>
+//                 <option value="cs">CS</option>
+//                 <option value="sa">SA</option>
+//                 <option value="rs">RS</option>
+//               </select>
+//             </div>
+
+//             {/* মৌজা */}
+//             <div>
+//               <label className="block mb-1 font-semibold">মৌজা</label>
+//               <input
+//                 type="text"
+//                 value={mouza}
+//                 onChange={(e) => setMouza(e.target.value)}
+//                 className="w-full border border-gray-300 rounded px-3 py-2"
+//                 placeholder="মৌজা লিখুন"
+//               />
+//             </div>
+
+//             {/* খুঁজুন */}
+//             <div className="flex items-end">
+//               <button
+//                 onClick={handleSubmit}
+//                 className="bg-green-600 text-white w-full py-2 rounded hover:bg-green-700 flex items-center justify-center"
+//               >
+//                 <Search className="w-4 h-4 mr-2" /> খুঁজুন
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Scroll Top Button */}
+//       <button
+//         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+//         className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-lg"
+//       >
+//         ↑
+//       </button>
+//     </div>
+//   );
+// }
